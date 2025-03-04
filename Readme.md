@@ -1,72 +1,104 @@
-# Testing Instructions for Liqfinity Token (LFAI)
+# Liqfinity Token (LFAI)
 
-This document contains instructions for installing dependencies and running tests for the Liqfinity Token (LFAI).
+Liqfinity Token (LFAI) is an ERC20 token implementation built on EVM-compatible networks with owner functionality, token and ETH withdrawal capabilities, and a total supply of 1 billion tokens.
+
+## Features
+
+- ERC20 standard compliant token
+- Token name: Liqfinity
+- Token symbol: LFAI
+- Total supply: 1,000,000,000 tokens
+- Owner functionality with restricted access to critical functions
+- Token withdrawal mechanism
+- ETH withdrawal mechanism
+- Token burning capability
 
 ## Prerequisites
 
 - Node.js (recommended version 16.x or newer)
 - npm (recommended version 8.x or newer)
+- Git
 
 ## Project Structure
 
-To properly configure the project, create the following directory structure:
-
 ```
 liqfinity-token/
+├── .github/
+│   └── workflows/
+│       └── solidity-test.yml
 ├── contracts/
 │   └── LiqfinityToken.sol
 ├── test/
 │   ├── LiqfinityToken.test.js
 │   └── LiqfinityToken.extended.test.js
+├── .gitignore
+├── .solhint.json
 ├── hardhat.config.js
 ├── package.json
 └── README.md
 ```
 
-## Installing Dependencies
+## Getting Started
 
-1. Create a new Hardhat project:
+### Installation
+
+1. Clone the repository:
 
 ```bash
-mkdir liqfinity-token
+git clone https://github.com/yourusername/liqfinity-token.git
 cd liqfinity-token
-npm init -y
 ```
 
-2. Install Hardhat and necessary dependencies:
+2. Install dependencies:
 
 ```bash
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox chai ethers@^6.0.0
+npm install
 ```
 
-3. Install OpenZeppelin Contracts:
+### Compiling Contracts
+
+Compile the smart contracts:
 
 ```bash
-npm install @openzeppelin/contracts
+npx hardhat compile
 ```
 
-## Project Files
+### Running Tests
 
-1. Place the `LiqfinityToken.sol` contract in the `contracts/` directory.
-2. Place the basic test file `LiqfinityToken.test.js` in the `test/` directory.
-3. Place the extended test file `LiqfinityToken.extended.test.js` in the `test/` directory.
-4. Copy the Hardhat configuration to the `hardhat.config.js` file in the project's root directory.
-
-## Running Tests
-
-To run the tests, execute the following command in the project's root directory:
+Run the test suite to verify the functionality:
 
 ```bash
 npx hardhat test
 ```
 
-You should see the test results that verify all functionality of the Liqfinity Token contract.
+### Linting Solidity Code
 
-## Test Description
+Check your code for style and best practices:
+
+```bash
+npx solhint 'contracts/**/*.sol'
+```
+
+## Contract Details
+
+The Liqfinity Token implements the following interfaces:
+
+- ERC20: Standard token interface
+- ERC20Burnable: Adds token burning capabilities
+- Ownable: Provides access control mechanisms
+
+Key functions include:
+
+- `withdrawTokens`: Allows owner to withdraw tokens from the contract
+- `withdrawETH`: Allows owner to withdraw ETH from the contract
+- `receive()`: Enables the contract to receive ETH
+- `increaseAllowance`/`decreaseAllowance`: Enhanced approval mechanisms
+
+## Test Coverage
 
 ### Basic Tests (`LiqfinityToken.test.js`)
 
-The basic tests check the following aspects of the contract:
+These tests verify the fundamental functionality of the token:
 
 1. **Initialization**:
    - Correct name and symbol of the token
@@ -76,7 +108,7 @@ The basic tests check the following aspects of the contract:
 2. **Token Transfers**:
    - Token transfer by the owner
    - Token transfers between users
-   - Handling of invalid transfers (more than a user owns)
+   - Handling of invalid transfers
 
 3. **Owner Functions**:
    - Withdrawal of tokens from the contract by the owner
@@ -91,13 +123,13 @@ The basic tests check the following aspects of the contract:
 
 ### Extended Tests (`LiqfinityToken.extended.test.js`)
 
-The extended tests cover more advanced functionality and edge cases:
+These tests cover more advanced functionality and edge cases:
 
 1. **Approval and TransferFrom Functionality**:
    - Token approval and allowance verification
    - Transferring tokens via transferFrom with sufficient allowance
    - Handling insufficient allowance cases
-   - Increasing and decreasing allowances
+   - Updating allowances
 
 2. **Event Testing**:
    - Verification of Transfer events on token movements
@@ -116,3 +148,35 @@ The extended tests cover more advanced functionality and edge cases:
    - Protection against reentrancy attacks
    - Preventing approvals to the zero address
    - Handling large token amount transfers
+
+## Continuous Integration
+
+The project uses GitHub Actions for continuous integration. On each push or pull request to the main branches, the workflow will:
+
+1. Compile the contracts
+2. Run the test suite
+3. Lint the Solidity code
+
+To view the workflow results, check the Actions tab in the GitHub repository.
+
+## Deployment
+
+To deploy the contract to a network, update the `hardhat.config.js` file with your network configuration and then run:
+
+```bash
+npx hardhat run scripts/deploy.js --network <network-name>
+```
+
+Note: You'll need to create a deployment script first in a `scripts` directory.
+
+## Security
+
+This contract has not been audited. Use at your own risk.
+
+## License
+
+MIT
+
+---
+
+For any questions or issues, please open an issue in the GitHub repository.

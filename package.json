@@ -1,21 +1,42 @@
 {
-  "name": "liqfinity-token-v2",
+  "name": "liqfinity-token",
   "version": "1.0.0",
+  "description": "ERC20 token implementation for Liqfinity (LFAI)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "lint": "solhint 'contracts/**/*.sol'",
+    "lint:fix": "solhint 'contracts/**/*.sol' --fix",
+    "coverage": "hardhat coverage"
   },
-  "keywords": [],
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "hardhat",
+    "solidity",
+    "erc20",
+    "token"
+  ],
   "author": "",
-  "license": "ISC",
-  "description": "",
+  "license": "MIT",
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "chai": "^4.5.0",
-    "ethers": "^6.13.5",
-    "hardhat": "^2.22.19"
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "chai": "^4.2.0",
+    "ethers": "^6.4.0",
+    "hardhat": "^2.19.0",
+    "hardhat-gas-reporter": "^1.0.8",
+    "solhint": "^4.0.0",
+    "solidity-coverage": "^0.8.0",
+    "typechain": "^8.3.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.2.0"
+    "@openzeppelin/contracts": "^5.0.0"
   }
 }
