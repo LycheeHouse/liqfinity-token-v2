@@ -142,13 +142,13 @@ describe("LiqfinityToken Extended Tests", function () {
 
       await expect(
           liqfinityToken.withdrawTokens(ethers.ZeroAddress, tokenAmount)
-      ).to.be.revertedWith("LiqfinityToken: cannot withdraw to zero address");
+      ).to.be.revertedWithCustomError(liqfinityToken, "ZeroAddress");
     });
 
     it("Should prevent withdrawing zero tokens", async function () {
       await expect(
           liqfinityToken.withdrawTokens(user1.address, 0)
-      ).to.be.revertedWith("LiqfinityToken: amount must be greater than zero");
+      ).to.be.revertedWithCustomError(liqfinityToken, "ZeroAmount");
     });
 
     it("Should prevent withdrawing more tokens than contract has", async function () {
@@ -159,7 +159,7 @@ describe("LiqfinityToken Extended Tests", function () {
 
       await expect(
           liqfinityToken.withdrawTokens(user1.address, withdrawAmount)
-      ).to.be.revertedWith("LiqfinityToken: insufficient token balance");
+      ).to.be.revertedWithCustomError(liqfinityToken, "InsufficientTokenBalance");
     });
   });
 
@@ -200,11 +200,11 @@ describe("LiqfinityToken Extended Tests", function () {
       // are met before making the external call
       await expect(
           liqfinityToken.withdrawETH(ethers.ZeroAddress, ethAmount)
-      ).to.be.revertedWith("LiqfinityToken: cannot withdraw to zero address");
+      ).to.be.revertedWithCustomError(liqfinityToken, "ZeroAddress");
 
       await expect(
           liqfinityToken.withdrawETH(user1.address, ethers.parseEther("2"))
-      ).to.be.revertedWith("LiqfinityToken: insufficient ETH balance");
+      ).to.be.revertedWithCustomError(liqfinityToken, "InsufficientETHBalance");
     });
 
     it("Should prevent approval from current owner to zero address", async function () {
