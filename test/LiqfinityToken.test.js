@@ -21,7 +21,7 @@ describe("LiqfinityToken", function () {
 
   describe("Initialization", function () {
     it("Should set the correct name and symbol", async function () {
-      expect(await liqfinityToken.name()).to.equal("Liqfinity");
+      expect(await liqfinityToken.name()).to.equal("Liqfinity AI");
       expect(await liqfinityToken.symbol()).to.equal("LFAI");
     });
 

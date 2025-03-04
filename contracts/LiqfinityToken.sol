@@ -6,7 +6,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
 /**
- * @title Liqfinity Token (LFAI)
+ * @title Liqfinity AI Token (LFAI)
  * @dev Implementation of ERC20 token with owner functionality and ability to withdraw tokens and ETH
  */
 contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
@@ -25,7 +25,7 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
      * @dev Constructor that sets the name, symbol and allocates the initial amount of tokens to the deployer
      * @param initialOwner Address of the initial token owner
      */
-    constructor(address initialOwner) ERC20("Liqfinity", "LFAI") Ownable(initialOwner) {
+    constructor(address initialOwner) ERC20("Liqfinity AI", "LFAI") Ownable(initialOwner) {
         _mint(initialOwner, INITIAL_SUPPLY);
     }
 

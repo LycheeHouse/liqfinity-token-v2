@@ -1,11 +1,11 @@
-# Liqfinity Token (LFAI)
+# Liqfinity AI Token (LFAI)
 
-Liqfinity Token (LFAI) is an ERC20 token implementation built on EVM-compatible networks with owner functionality, token and ETH withdrawal capabilities, and a total supply of 1 billion tokens.
+Liqfinity AI Token (LFAI) is an ERC20 token implementation built on EVM-compatible networks with owner functionality, token and ETH withdrawal capabilities, and a total supply of 1 billion tokens.
 
 ## Features
 
 - ERC20 standard compliant token
-- Token name: Liqfinity
+- Token name: Liqfinity AI
 - Token symbol: LFAI
 - Total supply: 1,000,000,000 tokens
 - Owner functionality with restricted access to critical functions
