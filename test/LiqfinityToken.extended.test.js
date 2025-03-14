@@ -170,12 +170,25 @@ describe("LiqfinityToken Extended Tests", function () {
       ).to.be.revertedWithCustomError(liqfinityToken, "OwnableUnauthorizedAccount");
     });
 
-    it("Should allow owner to transfer ownership", async function () {
+    it("Should implement two-step ownership transfer correctly", async function () {
+      // Step 1: Owner proposes new owner
       await liqfinityToken.transferOwnership(user1.address);
 
-      // After transfer, user1 should be able to call owner functions
+      // Verify ownership hasn't changed yet
+      expect(await liqfinityToken.owner()).to.equal(owner.address);
+
+      // Pending owner should be user1
+      expect(await liqfinityToken.pendingOwner()).to.equal(user1.address);
+
+      // Step 2: New owner accepts ownership
+      await liqfinityToken.connect(user1).acceptOwnership();
+
+      // Verify ownership has been transferred
+      expect(await liqfinityToken.owner()).to.equal(user1.address);
+
+      // New owner should be able to call owner functions
       const tokenAmount = ethers.parseEther("1000");
-      await liqfinityToken.transfer(liqfinityToken.target, tokenAmount);
+      await liqfinityToken.connect(owner).transfer(liqfinityToken.target, tokenAmount);
 
       // New owner should be able to withdraw tokens
       await liqfinityToken.connect(user1).withdrawTokens(user2.address, tokenAmount);
@@ -221,6 +234,30 @@ describe("LiqfinityToken Extended Tests", function () {
 
       expect(await liqfinityToken.balanceOf(user1.address)).to.equal(initialSupply);
       expect(await liqfinityToken.balanceOf(owner.address)).to.equal(0);
+    });
+
+    it("Should not allow proposed new owner to transfer ownership before accepting", async function () {
+      // Owner proposes user1 as new owner
+      await liqfinityToken.transferOwnership(user1.address);
+
+      // User1 hasn't accepted ownership yet, so shouldn't be able to transfer to user2
+      await expect(
+          liqfinityToken.connect(user1).transferOwnership(user2.address)
+      ).to.be.revertedWithCustomError(liqfinityToken, "OwnableUnauthorizedAccount");
+    });
+
+    it("Should allow owner to cancel ownership transfer if not yet accepted", async function () {
+      // Owner proposes user1 as new owner
+      await liqfinityToken.transferOwnership(user1.address);
+
+      // Owner decides to cancel the transfer
+      await liqfinityToken.connect(owner).cancelOwnershipTransfer();
+
+      // Pending owner should be reset
+      expect(await liqfinityToken.pendingOwner()).to.equal(ethers.ZeroAddress);
+
+      // Ownership remains with original owner
+      expect(await liqfinityToken.owner()).to.equal(owner.address);
     });
   });
 });

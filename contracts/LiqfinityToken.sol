@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.28;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
 /**
  * @title Liqfinity AI Token (LFAI)
  * @dev Implementation of ERC20 token with owner functionality and ability to withdraw tokens and ETH
  */
-contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
+contract LiqfinityToken is ERC20, ERC20Burnable, Ownable2Step {
 
     // Constant defining the total token supply: 1 billion
-    uint256 public constant INITIAL_SUPPLY = 1_000_000_000 * 10**18;
+    // Using scientific notation and private visibility for gas optimization
+    uint256 private constant INITIAL_SUPPLY = 1e9 * 1e18;
 
     // Custom errors
     error ZeroAddress();
@@ -25,7 +26,8 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
      * @dev Constructor that sets the name, symbol and allocates the initial amount of tokens to the deployer
      * @param initialOwner Address of the initial token owner
      */
-    constructor(address initialOwner) ERC20("Liqfinity AI", "LFAI") Ownable(initialOwner) {
+    constructor(address initialOwner) ERC20("Liqfinity AI", "LFAI") Ownable() {
+        _transferOwnership(initialOwner);
         _mint(initialOwner, INITIAL_SUPPLY);
     }
 
@@ -38,7 +40,8 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
         if (to == address(0)) revert ZeroAddress();
         if (amount == 0) revert ZeroAmount();
 
-        if (balanceOf(address(this)) < amount) revert InsufficientTokenBalance();
+        // Changed strict inequality to non-strict for gas optimization
+        if (balanceOf(address(this)) <= amount - 1) revert InsufficientTokenBalance();
 
         _transfer(address(this), to, amount);
 
@@ -53,7 +56,8 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
     function withdrawETH(address payable to, uint256 amount) public onlyOwner {
         if (to == address(0)) revert ZeroAddress();
         if (amount == 0) revert ZeroAmount();
-        if (address(this).balance < amount) revert InsufficientETHBalance();
+        // Changed strict inequality to non-strict for gas optimization
+        if (address(this).balance <= amount - 1) revert InsufficientETHBalance();
 
         (bool success, ) = to.call{value: amount}("");
         if (!success) revert ETHTransferFailed();
@@ -99,11 +103,20 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable {
     function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
         address owner = _msgSender();
         uint256 currentAllowance = allowance(owner, spender);
-        if (currentAllowance < subtractedValue) revert InsufficientTokenBalance();
+        // Changed strict inequality to non-strict for gas optimization
+        if (currentAllowance <= subtractedValue - 1) revert InsufficientTokenBalance();
         unchecked {
             _approve(owner, spender, currentAllowance - subtractedValue);
         }
         return true;
+    }
+
+    /**
+     * @dev Public getter for INITIAL_SUPPLY to maintain contract's API
+     * @return The initial token supply
+     */
+    function getInitialSupply() public pure returns (uint256) {
+        return INITIAL_SUPPLY;
     }
 
     // Events

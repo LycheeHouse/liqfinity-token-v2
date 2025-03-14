@@ -33,6 +33,10 @@ describe("LiqfinityToken", function () {
     it("Should set the correct owner", async function () {
       expect(await liqfinityToken.owner()).to.equal(owner.address);
     });
+
+    it("Should return the correct initial supply", async function () {
+      expect(await liqfinityToken.getInitialSupply()).to.equal(initialSupply);
+    });
   });
 
   describe("Token Transfers", function () {
