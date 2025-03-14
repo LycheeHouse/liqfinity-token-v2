@@ -2,6 +2,7 @@
 pragma solidity 0.8.28;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
@@ -26,8 +27,10 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable2Step {
      * @dev Constructor that sets the name, symbol and allocates the initial amount of tokens to the deployer
      * @param initialOwner Address of the initial token owner
      */
-    constructor(address initialOwner) ERC20("Liqfinity AI", "LFAI") Ownable() {
-        _transferOwnership(initialOwner);
+    constructor(address initialOwner)
+    ERC20("Liqfinity AI", "LFAI")
+    Ownable(initialOwner)
+    {
         _mint(initialOwner, INITIAL_SUPPLY);
     }
 
