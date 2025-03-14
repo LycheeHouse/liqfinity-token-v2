@@ -122,6 +122,14 @@ contract LiqfinityToken is ERC20, ERC20Burnable, Ownable2Step {
         return INITIAL_SUPPLY;
     }
 
+    /**
+     * @dev Allows the current owner to cancel an ownership transfer that hasn't been accepted yet
+     * This resets the pendingOwner address to zero address
+     */
+    function cancelOwnershipTransfer() public onlyOwner {
+        _transferOwnership(owner());
+    }
+
     // Events
     event TokensWithdrawn(address indexed to, uint256 amount);
     event ETHWithdrawn(address indexed to, uint256 amount);
